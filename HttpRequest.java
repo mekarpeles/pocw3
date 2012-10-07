@@ -43,24 +43,24 @@ final class HttpRequest implements Runnable
 	    url += "index.html";
 	return url;
     }
-
     
     public String resolve_file(String url)
     {
 	if (url.indexOf("/") == -1)
 	    return url;
-	return url.substring(url.lastIndexOf("/") + 1, url.length());
+	return "resource/" + url.substring(url.lastIndexOf("/") + 1, url.length());
     }
-    
 
     public void serve_mode(String url, DataOutputStream os) throws Exception
     {
-	if (new File(resolve_file(url)).exists()) {
+	String get_url = "resource" + url;
+	
+	if (new File(resolve_file(get_url)).exists()) {
 	    FileInputStream fis = null;
 	    try { // Construct the response message.
-		fis = new FileInputStream("." + url);
+		fis = new FileInputStream(get_url);
 		os.writeBytes("HTTP/1.1 200 OK");
-		os.writeBytes("Content-type: " + mime.type(url) + "\n\n");
+		os.writeBytes("Content-type: " + mime.type(get_url) + "\n\n");
 		sendBytes(fis, os);
 		fis.close();
 	    } catch (FileNotFoundException e) {
